@@ -10,3 +10,15 @@ class ExpenseSerializer(serializers.ModelSerializer):
                   'title',
                   'description',
                   'price')
+
+
+class ExpenseDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Expense
+        fields = ('category',
+                  'title',
+                  'description',
+                  'price',
+                  'account',
+                  'date_created')
+        depth = 1
