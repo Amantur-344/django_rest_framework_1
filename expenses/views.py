@@ -1,15 +1,14 @@
-from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import status, viewsets
 from rest_framework.response import Response
 
-from expenses.models import Expense, Category
-from expenses.permissions import IsOwner
-from expenses.serializers import ExpenseSerializer, ExpenseDetailSerializer
+from expenses.models import Expense
 from users.models import Account
+from .permissions import IsOwner
+from expenses.serializers import ExpenseSerializer
 from rest_framework import generics, permissions
+
+from .services import TopUpService
+from .validators import TopUpValidator
 
 
 class ExpenseListCreateAPIVIew(generics.ListCreateAPIView):
@@ -27,6 +26,26 @@ class ExpenseRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Expense.objects.all()
     serializer_class = ExpenseSerializer
     permission_classes = (permissions.IsAuthenticated, IsOwner)
+
+
+class ExpenseViewSet(viewsets.ModelViewSet):
+    serializer_class = ExpenseSerializer
+    queryset = Expense.objects.all()
+    permission_classes = (permissions.IsAuthenticated, IsOwner)
+
+
+class BalanceIncreaseAPIView(generics.GenericAPIView):
+    validator_class = TopUpValidator
+    serializer_class = TopUpService
+
+    def post(self, request, *args, **kwargs):
+        balance = request.data.get('balance')
+        if not self.validator_class.validator_balance(balance):
+            return Response('Pass balance to top up', status=status.HTTP_400_BAD_REQUEST)
+
+        self.service_class.top_up(request.user, balance)
+
+        return Response('Ok', status=status.HTTP_200_OK)
 
 
 # class ExpenseCreateAPIView(generics.CreateAPIView):

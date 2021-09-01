@@ -42,3 +42,16 @@ class AccountRegistrationSerializer(serializers.ModelSerializer):
         )
 
         return account
+
+
+class AccountDetailSerializer(serializers.ModelSerializer):
+    # account = serializers.PrimaryKeyRelatedField(many=True, queryset=Account.objects.all())
+    # owner = serializers.ReadOnlyField(source='owner.username')
+
+    class Meta:
+        model = Account
+        fields = ('first_name',
+                  'last_name',
+                  'salary',
+                  'balance')
+        # lookup_field = 'first_name'

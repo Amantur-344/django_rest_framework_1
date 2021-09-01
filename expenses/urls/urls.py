@@ -1,5 +1,36 @@
 from django.urls import path
-from .views import (
+from expenses.views import BalanceIncreaseAPIView
+from .routers import urlpatterns as routers
+
+urlpatterns = [
+    path('balance/top-up/', BalanceIncreaseAPIView.as_view())
+]
+
+urlpatterns += routers
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# from .views import (
     # expense_create_view,
     # expenses_list_api_view,
     # expense_retrieve_api_view,
@@ -10,15 +41,15 @@ from .views import (
     # ExpenseRetrieveAPIView,
     # ExpenseUpdateAPIView,
     # ExpenseDeleteAPIView
-    ExpenseListCreateAPIVIew,
-    ExpenseRetrieveUpdateDeleteView
-)
-
-
-urlpatterns = [
-    path('<int:pk>/', ExpenseRetrieveUpdateDeleteView.as_view()),
-    path('', ExpenseListCreateAPIVIew.as_view()),
-]
+#     ExpenseListCreateAPIVIew,
+#     ExpenseRetrieveUpdateDeleteView
+# )
+#
+#
+# urlpatterns = [
+#     path('<int:pk>/', ExpenseRetrieveUpdateDeleteView.as_view()),
+#     path('', ExpenseListCreateAPIVIew.as_view()),
+# ]
 # urlpatterns = [
 #     path('create/', ExpenseCreateAPIView.as_view()),
 #     path('list/', ExpenseListAPIView.as_view()),
